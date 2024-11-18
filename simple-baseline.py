@@ -1,5 +1,5 @@
 import pandas as pd
-from metrics import *
+from evaluate import *
 
 dev = "./data/dev.csv"
 train = "./data/train.csv"

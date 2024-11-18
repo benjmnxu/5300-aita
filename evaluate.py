@@ -1,3 +1,4 @@
+import sys
 from collections import Counter
 
 '''
@@ -77,3 +78,39 @@ def get_fscore(y_true, y_pred, label):
   precision = get_precision(y_true, y_pred, label)
   recall = get_recall(y_true, y_pred, label)
   return 2 * (precision * recall / (precision + recall)) if precision + recall != 0 else 0
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python evaluate.py <true_labels_file> <predicted_labels_file>")
+        sys.exit(1)
+
+    true_labels_file = sys.argv[1]
+    predicted_labels_file = sys.argv[2]
+
+    # Load labels from files
+    with open(true_labels_file, 'r') as f:
+        y_true = f.read().strip().split("\n")
+    with open(predicted_labels_file, 'r') as f:
+        y_pred = f.read().strip().split("\n")
+
+    if len(y_true) != len(y_pred):
+        print("Error: Mismatch in the number of true and predicted labels.")
+        sys.exit(1)
+
+    # Run metrics
+    print(f"Accuracy: {get_accuracy(y_true, y_pred):.4f}")
+    print(f"Weighted Precision: {get_weighted_precision(y_true, y_pred):.4f}")
+    print(f"Weighted Recall: {get_weighted_recall(y_true, y_pred):.4f}")
+    print(f"Weighted F1-Score: {get_weighted_fscore(y_true, y_pred):.4f}")
+    print(f"Macro Precision: {get_macro_precision(y_true, y_pred):.4f}")
+    print(f"Macro Recall: {get_macro_recall(y_true, y_pred):.4f}")
+    print(f"Macro F1-Score: {get_macro_fscore(y_true, y_pred):.4f}")
+
+    # Per-class metrics
+    unique_labels = set(y_true + y_pred)
+    print("\nPer-Class Metrics:")
+    for label in unique_labels:
+        precision = get_precision(y_true, y_pred, label)
+        recall = get_recall(y_true, y_pred, label)
+        fscore = get_fscore(y_true, y_pred, label)
+        print(f"Class: {label} - Precision: {precision:.4f}, Recall: {recall:.4f}, F1-Score: {fscore:.4f}")
