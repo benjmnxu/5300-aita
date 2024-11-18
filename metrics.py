@@ -14,8 +14,8 @@ def get_recall(y_true, y_pred):
     tp = 0
     fn = 0
     for actual, pred in zip(y_true, y_pred):
-      if pred=="Not the A-hole":
-        if actual=="Not the A-hole":
+      if actual=="Not the A-hole":
+        if pred=="Not the A-hole":
           tp+=1
         else:
           fn+=1
