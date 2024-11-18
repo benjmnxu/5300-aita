@@ -24,8 +24,9 @@ y_pred = model.predict(len(df_train))
 
 labels = df_train['verdict'].tolist()
 
-precision = get_precision(labels, y_pred)
-recall = get_recall(labels, y_pred)
-fscore = get_fscore(labels, y_pred)
+accuracy = get_accuracy(labels, y_pred)
+precision = get_weighted_precision(labels, y_pred)
+recall = get_weighted_recall(labels, y_pred)
+fscore = get_weighted_fscore(labels, y_pred)
 
-print("precision:", precision, "recall:", recall, "fscore:", fscore)
+print("accuracy", accuracy, "precision", precision, "recall", recall, "fscore:", fscore)
