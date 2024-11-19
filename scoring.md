@@ -2,9 +2,45 @@
 
 This document explains the evaluation metrics implemented in the script `score.py` and provides instructions for running the script from the command line.
 
-## Metrics
+## Weighted F1-Score
 
-The script calculates the following metrics for multi-class classification:
+The most suitable evaluation metric for our project is the weighted F1-score. It handles the imbalance in our data, as NTA is the most frequent class (over 64%) across our training, development, and test datasets, followed by YTA (about 20%), then NAH (about 9%), and lastly, ESH (about 5%).
+
+Our project involves understanding community judgments ("NTA", "YTA", etc.), so capturing and balancing false positives and false negatives are both critical.
+
+The weighted F1-score also is ideal for multi-class settings, as it aggregates per-class performance into a single, interpretable metric.
+
+The **Weighted F1-Score** is calculated as the weighted average of the F1-Scores for each class, where the weight for each class is proportional to the number of true instances of that class.
+
+#### Formula:
+
+$$
+\text{Weighted F1-Score} = \sum_{i=1}^{n} w_i \cdot \text{F1-Score}_i
+$$
+
+Where:
+
+- $n$: Total number of classes (4).
+- $ w_i $: Weight for class $i$, calculated as:
+  $$
+  w_i = \frac{\text{Number of True Instances of Class } i}{\text{Total Number of Instances}}
+  $$
+- $ \text{F1-Score}\_i $: F1-Score for class $i$, calculated as:
+  $$
+  \text{F1-Score}_i = \frac{2 \cdot \text{Precision}_i \cdot \text{Recall}_i}{\text{Precision}_i + \text{Recall}_i}
+  $$
+- $\text{Precision}_i$: Precision for class $i$, defined as:
+  $$
+  \text{Precision}_i = \frac{\text{True Positives}_i}{\text{True Positives}_i + \text{False Positives}_i}
+  $$
+- $ \text{Recall}\_i$ Recall for class $i$, defined as:
+  $$
+  \text{Recall}_i = \frac{\text{True Positives}_i}{\text{True Positives}_i + \text{False Negatives}_i}
+  $$
+
+## All Metrics
+
+Our `score.py` script calculates the various metrics for our multi-class classification:
 
 ### 1. **Accuracy**
 
