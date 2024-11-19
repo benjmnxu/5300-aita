@@ -1,6 +1,6 @@
 # Scoring Script Documentation
 
-This document explains the evaluation metrics implemented in the script `evaluate.py` and provides instructions for running the script from the command line.
+This document explains the evaluation metrics implemented in the script `score.py` and provides instructions for running the script from the command line.
 
 ## Metrics
 
@@ -49,7 +49,7 @@ The script requires two files:
 Run the script from the command line as follows:
 
 ```
-python evaluate.py <true_labels_file> <predicted_labels_file>
+python score.py <true_labels_file> <predicted_labels_file>
 ```
 
 ### Example Output
