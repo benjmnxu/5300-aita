@@ -1,5 +1,5 @@
 import pandas as pd
-from evaluate import *
+from score import *
 
 dev = "./data/dev.csv"
 train = "./data/train.csv"
