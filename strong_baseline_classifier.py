@@ -60,7 +60,7 @@ print("Dev embeddings shape:", X_dev_embeddings.shape)
 y_train = df_train["verdict"]
 y_dev = df_dev["verdict"]
 
-pca = PCA(n_components=30) # worked best after quasi grid-search 
+pca = PCA(n_components=30) # 30 worked best after quasi grid-search 
 X_train_pca = pca.fit_transform(X_train_embeddings)
 X_dev_pca = pca.transform(X_dev_embeddings)
 model = LogisticRegression(max_iter=500, multi_class="multinomial", solver="lbfgs")
