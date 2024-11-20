@@ -88,6 +88,18 @@ Run the script from the command line as follows:
 python score.py <true_labels_file> <predicted_labels_file>
 ```
 
+For the majority class baseline, this is:
+```
+python score.py true_labels_dev.txt predicted_labels_simple.txt
+```
+and yields 0.6439 as the precision (dataset distribution) and 1.0 as the recall for the majority class - then 0 for everything else.
+
+For the strong baseline, this is:
+```
+python score.py true_labels_dev.txt predicted_labels_strong.txt
+```
+
+
 ### Example Output
 
 - Accuracy: 0.5000
