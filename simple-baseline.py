@@ -24,6 +24,14 @@ y_pred = model.predict(len(df_train))
 
 labels = df_train['verdict'].tolist()
 
+with open("true_labels_dev.txt", "w") as true_file:
+    for label in labels:
+        true_file.write(f"{label}\n")
+
+with open("predicted_labels_simple.txt", "w") as pred_file:
+    for pred in y_pred:
+        pred_file.write(f"{pred}\n")
+
 accuracy = get_accuracy(labels, y_pred)
 precision = get_weighted_precision(labels, y_pred)
 recall = get_weighted_recall(labels, y_pred)
