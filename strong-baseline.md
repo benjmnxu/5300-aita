@@ -1,4 +1,5 @@
-## Data Format
+## Strong Baseline Outline
+
 The code expects the following files (which are all in our Github repo):
 
 ```train.csv```: Training data.
