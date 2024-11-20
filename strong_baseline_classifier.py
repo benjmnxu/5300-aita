@@ -9,8 +9,8 @@ from sklearn.decomposition import PCA
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-df_train = pd.read_csv('train.csv')
-df_dev = pd.read_csv('dev.csv')
+df_train = pd.read_csv('data/train.csv')
+df_dev = pd.read_csv('data/dev.csv')
 
 model_name = "distilbert-base-uncased"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
