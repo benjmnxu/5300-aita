@@ -9,12 +9,12 @@ from sklearn.decomposition import PCA
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-df_train = pd.read_csv('data/train.csv')
-df_dev = pd.read_csv('data/dev.csv')
+df_train = pd.read_csv('train.csv') 
+df_dev = pd.read_csv('dev.csv') 
 
-model_name = "distilbert-base-uncased"
+model_name = "distilbert-base-uncased"  
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-hf_model = AutoModel.from_pretrained(model_name).to(device)
+hf_model = AutoModel.from_pretrained(model_name).to(device) 
 
 def standardize_labels(df):
     df["verdict"] = df["verdict"].str.lower().str.replace("-", " ").str.strip()
@@ -22,15 +22,6 @@ def standardize_labels(df):
 
 df_train = standardize_labels(df_train)
 df_dev = standardize_labels(df_dev)
-
-def merge_rare_classes(df, threshold=20):
-    counts = df["verdict"].value_counts()
-    rare_classes = counts[counts < threshold].index
-    df["verdict"] = df["verdict"].replace(rare_classes, "other")
-    return df
-
-df_train = merge_rare_classes(df_train)
-df_dev = merge_rare_classes(df_dev)
 
 def generate_batched_embeddings(texts, tokenizer, model, batch_size=512, max_length=128):
     embeddings = []
@@ -42,10 +33,10 @@ def generate_batched_embeddings(texts, tokenizer, model, batch_size=512, max_len
             truncation=True,
             max_length=max_length,
             return_tensors="pt"
-        ).to(device)
-        with torch.no_grad():
+        ).to(device)  
+        with torch.no_grad(): 
             outputs = model(**inputs)
-        batch_embeddings = outputs.last_hidden_state[:, 0, :].cpu().numpy()
+        batch_embeddings = outputs.last_hidden_state[:, 0, :].cpu().numpy()  
         embeddings.append(batch_embeddings)
     return np.vstack(embeddings)
 
@@ -78,3 +69,7 @@ y_pred = model.predict(X_dev_pca)
 accuracy = accuracy_score(y_dev, y_pred)
 
 print("Accuracy:", accuracy)
+
+with open("predicted_labels_strong.txt", "w") as pred_file:
+    for pred in y_pred:
+        pred_file.write(f"{pred}\n")
