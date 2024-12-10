@@ -24,6 +24,9 @@ def standardize_labels(df):
 df_train = standardize_labels(df_train)
 df_dev = standardize_labels(df_dev)
 
+print(len(df_train))
+print(len(df_dev))
+
 def generate_batched_embeddings(texts, tokenizer, model, batch_size=512, max_length=128):
     embeddings = []
     for i in tqdm(range(0, len(texts), batch_size), desc='Generating embeddings'):
@@ -42,14 +45,20 @@ def generate_batched_embeddings(texts, tokenizer, model, batch_size=512, max_len
     return np.vstack(embeddings)
 
 
-X_train_body_embeddings = generate_batched_embeddings(df_train["body"].tolist(), tokenizer, hf_model, batch_size=64)
-X_dev_body_embeddings = generate_batched_embeddings(df_dev["body"].tolist(), tokenizer, hf_model, batch_size=64)
+df_train["upvote_ratio"] = df_train["upvote_ratio"].astype(float)
+df_dev["upvote_ratio"] = df_dev["upvote_ratio"].astype(float)
 
 X_train_title_embeddings = generate_batched_embeddings(df_train["title"].tolist(), tokenizer, hf_model, batch_size=64)
 X_dev_title_embeddings = generate_batched_embeddings(df_dev["title"].tolist(), tokenizer, hf_model, batch_size=64)
 
-X_train_embeddings = np.hstack((X_train_body_embeddings, X_train_title_embeddings))
-X_dev_embeddings = np.hstack((X_dev_body_embeddings, X_dev_title_embeddings))
+X_train_body_embeddings = generate_batched_embeddings(df_train["body"].tolist(), tokenizer, hf_model, batch_size=64)
+X_dev_body_embeddings = generate_batched_embeddings(df_dev["body"].tolist(), tokenizer, hf_model, batch_size=64)
+
+X_train_body_summary_embeddings = generate_batched_embeddings(df_train["body_summary"].tolist(), tokenizer, hf_model, batch_size=64)
+X_dev_body_summary_embeddings = generate_batched_embeddings(df_dev["body_summary"].tolist(), tokenizer, hf_model, batch_size=64)
+
+X_train_embeddings = np.hstack((X_train_title_embeddings, X_train_body_summary_embeddings, X_train_body_embeddings))
+X_dev_embeddings = np.hstack((X_dev_title_embeddings, X_dev_body_summary_embeddings, X_dev_body_embeddings))
 
 scaler = StandardScaler()
 X_train_embeddings_scaled = scaler.fit_transform(X_train_embeddings)
@@ -61,9 +70,9 @@ print("Dev embeddings shape:", X_dev_embeddings.shape)
 y_train = df_train["target"]
 y_dev = df_dev["target"]
 
-pca = PCA(n_components=30) # 30 worked best after quasi grid-search 
-X_train_pca = pca.fit_transform(X_train_embeddings)
-X_dev_pca = pca.transform(X_dev_embeddings)
+pca = PCA(n_components=30)
+X_train_pca = pca.fit_transform(X_train_embeddings_scaled)
+X_dev_pca = pca.transform(X_dev_embeddings_scaled)
 model = LogisticRegression(max_iter=500, multi_class="multinomial", solver="lbfgs")
 model.fit(X_train_pca, y_train)
 y_pred = model.predict(X_dev_pca)
@@ -71,10 +80,10 @@ accuracy = accuracy_score(y_dev, y_pred)
 
 print("Accuracy:", accuracy)
 
-with open("predicted_labels_strong_augmented.txt", "w") as pred_file:
+with open("predicted_labels_strong.txt", "w") as pred_file:
     for pred in y_pred:
         pred_file.write(f"{pred}\n")
 
-with open("true_labels_strong_no_summary.txt", "w") as true_file:
+with open("true_labels_strong.txt", "w") as true_file:
     for true_label in y_dev:
         true_file.write(f"{true_label}\n")
