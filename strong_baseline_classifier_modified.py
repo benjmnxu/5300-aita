@@ -80,10 +80,10 @@ accuracy = accuracy_score(y_dev, y_pred)
 
 print("Accuracy:", accuracy)
 
-with open("predicted_labels_strong.txt", "w") as pred_file:
+with open("labels/predicted_labels_strong.txt", "w") as pred_file:
     for pred in y_pred:
         pred_file.write(f"{pred}\n")
 
-with open("true_labels_strong.txt", "w") as true_file:
+with open("labels/true_labels_strong.txt", "w") as true_file:
     for true_label in y_dev:
         true_file.write(f"{true_label}\n")
