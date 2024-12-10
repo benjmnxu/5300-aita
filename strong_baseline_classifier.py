@@ -6,18 +6,19 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from tqdm import tqdm
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-df_train = pd.read_csv('data/train.csv') 
-df_dev = pd.read_csv('data/dev.csv') 
+df_train = pd.read_csv('data/balanced_train_dataset_augmented.csv') 
+df_dev = pd.read_csv('data/balanced_dev_dataset_augmented.csv') 
 
 model_name = "distilbert-base-uncased"  
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 hf_model = AutoModel.from_pretrained(model_name).to(device) 
 
 def standardize_labels(df):
-    df["verdict"] = df["verdict"].str.lower().str.replace("-", " ").str.strip()
+    df["target"] = df["target"].str.lower().str.replace("-", " ").str.strip()
     return df
 
 df_train = standardize_labels(df_train)
@@ -25,7 +26,7 @@ df_dev = standardize_labels(df_dev)
 
 def generate_batched_embeddings(texts, tokenizer, model, batch_size=512, max_length=128):
     embeddings = []
-    for i in range(0, len(texts), batch_size):
+    for i in tqdm(range(0, len(texts), batch_size), desc='Generating embeddings'):
         batch_texts = texts[i:i+batch_size]
         inputs = tokenizer(
             batch_texts,
@@ -57,8 +58,8 @@ X_dev_embeddings_scaled = scaler.transform(X_dev_embeddings)
 print("Train embeddings shape:", X_train_embeddings.shape)
 print("Dev embeddings shape:", X_dev_embeddings.shape)
 
-y_train = df_train["verdict"]
-y_dev = df_dev["verdict"]
+y_train = df_train["target"]
+y_dev = df_dev["target"]
 
 pca = PCA(n_components=30) # 30 worked best after quasi grid-search 
 X_train_pca = pca.fit_transform(X_train_embeddings)
@@ -70,6 +71,11 @@ accuracy = accuracy_score(y_dev, y_pred)
 
 print("Accuracy:", accuracy)
 
-with open("predicted_labels_strong.txt", "w") as pred_file:
+with open("predicted_labels_strong_augmented.txt", "w") as pred_file:
     for pred in y_pred:
         pred_file.write(f"{pred}\n")
+
+with open("true_labels_dev_strong_augmented.txt", "w") as dev_file:
+    for d in y_dev:
+        dev_file.write(f"{d}\n")
+
