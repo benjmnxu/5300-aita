@@ -9,8 +9,8 @@ from sklearn.decomposition import PCA
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-df_train = pd.read_csv('data/train.csv') 
-df_dev = pd.read_csv('data/dev.csv') 
+df_train = pd.read_csv('data/balanced_train_dataset_augmented.csv') 
+df_dev = pd.read_csv('data/balanced_dev_dataset_augmented.csv') 
 
 model_name = "distilbert-base-uncased"  
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -73,3 +73,7 @@ print("Accuracy:", accuracy)
 with open("predicted_labels_strong.txt", "w") as pred_file:
     for pred in y_pred:
         pred_file.write(f"{pred}\n")
+
+with open("true_labels_strong_no_summary.txt", "w") as true_file:
+    for true_label in y_dev:
+        true_file.write(f"{true_label}\n")
