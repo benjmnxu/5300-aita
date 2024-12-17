@@ -110,7 +110,7 @@ model = NeuralNetwork(input_size=input_size, num_classes=num_classes)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-num_epochs = 100
+num_epochs = 10
 for epoch in range(num_epochs):
     model.train()
     for X_batch, y_batch in train_loader:
