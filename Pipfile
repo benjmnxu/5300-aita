@@ -9,6 +9,7 @@ torch = "*"
 transformers = "*"
 scikit-learn = "*"
 aiohttp = "*"
+openai = "*"
 
 [dev-packages]
 

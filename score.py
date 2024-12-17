@@ -94,6 +94,7 @@ if __name__ == "__main__":
         y_pred = f.read().strip().split("\n")
 
     if len(y_true) != len(y_pred):
+        print(len(y_true), len(y_pred))
         print("Error: Mismatch in the number of true and predicted labels.")
         sys.exit(1)
 
