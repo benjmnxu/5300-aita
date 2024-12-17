@@ -1,5 +1,6 @@
 import sys
 from collections import Counter
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 '''
 Classes: NTA, YTA, ESH, NAH
@@ -79,6 +80,15 @@ def get_fscore(y_true, y_pred, label):
   recall = get_recall(y_true, y_pred, label)
   return 2 * (precision * recall / (precision + recall)) if precision + recall != 0 else 0
 
+def display_confusion_matrix(y_true, y_pred, labels):
+    labels = sorted(list(labels))
+    cm = confusion_matrix(y_true, y_pred, labels=labels)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+    disp.plot(cmap="viridis")
+    print("Confusion Matrix:")
+    print(cm)
+    return cm
+
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: python evaluate.py <true_labels_file> <predicted_labels_file>")
@@ -114,3 +124,6 @@ if __name__ == "__main__":
         recall = get_recall(y_true, y_pred, label)
         fscore = get_fscore(y_true, y_pred, label)
         print(f"Class: {label} - Precision: {precision:.4f}, Recall: {recall:.4f}, F1-Score: {fscore:.4f}")
+
+    
+    display_confusion_matrix(y_true, y_pred, unique_labels)
