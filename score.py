@@ -89,12 +89,11 @@ if __name__ == "__main__":
 
     # Load labels from files
     with open(true_labels_file, 'r') as f:
-        y_true = f.read().strip().split("\n")
+        y_true = f.read().strip().lower().split("\n")
     with open(predicted_labels_file, 'r') as f:
-        y_pred = f.read().strip().split("\n")
-
+        y_pred = f.read().strip().lower().split("\n")
+        
     if len(y_true) != len(y_pred):
-        print(len(y_true), len(y_pred))
         print("Error: Mismatch in the number of true and predicted labels.")
         sys.exit(1)
 
