@@ -16,19 +16,12 @@ from sklearn.preprocessing import LabelEncoder
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-df_train = pd.read_csv('data/train.csv') 
-df_dev = pd.read_csv('data/dev.csv') 
+df_train = pd.read_csv('data/new_train.csv') 
+df_dev = pd.read_csv('data/new_dev.csv') 
 
 model_name = "distilbert-base-uncased"  
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 hf_model = AutoModel.from_pretrained(model_name).to(device) 
-
-def standardize_labels(df):
-    df["target"] = df["target"].str.lower().str.replace("-", " ").str.strip()
-    return df
-
-df_train = standardize_labels(df_train)
-df_dev = standardize_labels(df_dev)
 
 print(len(df_train))
 print(len(df_dev))
@@ -87,7 +80,7 @@ torch.save({
     'y_train': y_train_tensor,
     'X_dev': X_dev_tensor,
     'y_dev': y_dev_tensor
-}, 'data/tensors.pt')
+}, 'data/synthetic_tensors.pt')
 
 train_dataset = TensorDataset(X_train_tensor, y_train_tensor)
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
@@ -142,6 +135,6 @@ y_dev_pred_labels = [reverse_label_mapping[pred] for pred in y_dev_pred]
 accuracy = accuracy_score(y_dev, y_dev_pred_labels)
 print("Accuracy on the dev set:", accuracy)
 
-with open("predicted_labels_NN.txt", "w") as pred_file:
+with open("predicted_labels_logistic_synthetic.txt", "w") as pred_file:
     for pred in y_dev_pred_labels:
         pred_file.write(f"{pred}\n")
