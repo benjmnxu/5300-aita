@@ -3,6 +3,7 @@
 The code expects the following files (which are all in our Github repo):
 
 ```data/train.csv```: Training data (alternatively, can use ```data/new_train.csv```)
+
 ```data/dev.csv```: Development (validation) data (alternatively, can use ```data/new_dev.csv```)
 
 To run this script, simply run ```python strong_baseline_classifier_NN.py```. 
