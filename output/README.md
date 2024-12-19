@@ -1,3 +1,5 @@
+(Note: We evaluated our model on the development set rather than the test set, as the development set was not used in any applications. Therefore, our predicted and gold labels correspond to the development sets of the generated datasets, not the test sets.)
+
 # Scoring Script Documentation
 
 This document explains the evaluation metrics implemented in the script `score.py` and provides instructions for running the script from the command line.
