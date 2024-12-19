@@ -7,8 +7,8 @@ from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 
 
-df_train = pd.read_csv('data/train.csv') 
-df_dev = pd.read_csv('data/dev.csv') 
+df_train = pd.read_csv('data/new_train.csv') 
+df_dev = pd.read_csv('data/new_dev.csv') 
 
 y_train = df_train["target"]
 y_dev = df_dev["target"]
@@ -21,7 +21,7 @@ y_dev_encoded = label_encoder.transform(y_dev)
 label_mapping = dict(zip(label_encoder.classes_, range(len(label_encoder.classes_))))
 reverse_label_mapping = {v: k for k, v in label_mapping.items()}
 
-data = torch.load('data/tensors.pt')
+data = torch.load('data/synthetic_tensors.pt')
 X_train_tensor = data['X_train']
 y_train_tensor = data['y_train']
 X_dev_tensor = data['X_dev']
@@ -76,6 +76,6 @@ y_dev_pred_labels = [reverse_label_mapping[pred] for pred in y_dev_pred]
 accuracy = accuracy_score(y_dev, y_dev_pred_labels)
 print("Accuracy on the dev set:", accuracy)
 
-with open("predicted_labels_NN.txt", "w") as pred_file:
+with open("predicted_labels_NN_synthetic.txt", "w") as pred_file:
     for pred in y_dev_pred_labels:
         pred_file.write(f"{pred}\n")
