@@ -25,7 +25,7 @@ test_data = pd.read_csv(test_path)
 
 data = pd.concat([dev_data, train_data, test_data], axis=0, ignore_index=True)
 
-client = AsyncOpenAI(api_key="")
+client = AsyncOpenAI(api_key="API_KEY")
 
 semaphore = asyncio.Semaphore(50)
 
@@ -145,7 +145,6 @@ if __name__ == "__main__":
         print(f"Usage: python {sys.argv[0]} <Class name (YTA, ESH, NAH, NTA)> <num samples>")
         sys.exit(1)
 
-    # Parse target class and number of samples
     target_class = sys.argv[1].upper()
     try:
         num_samples = int(sys.argv[2])
@@ -155,14 +154,11 @@ if __name__ == "__main__":
         print(f"Invalid number of samples: {e}")
         sys.exit(1)
 
-    # Validate target class
     if target_class not in mapping:
         print(f"Invalid target class. Must be one of {list(mapping.keys())}")
         sys.exit(1)
 
-    # Print confirmation
     print(f"Target class: {target_class}")
     print(f"Number of samples: {num_samples}")
 
-    # Call your main function or further processing
     asyncio.run(main(target_class, num_samples))

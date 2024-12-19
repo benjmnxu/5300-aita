@@ -10,6 +10,7 @@ transformers = "*"
 scikit-learn = "*"
 aiohttp = "*"
 openai = "*"
+matplotlib = "*"
 
 [dev-packages]
 
